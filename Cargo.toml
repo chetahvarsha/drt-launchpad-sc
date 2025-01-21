@@ -1,0 +1,20 @@
+[workspace]
+members = [
+  "launchpad-common",
+  "launchpad",
+  "launchpad/meta",
+  "launchpad-locked-tokens",
+  "launchpad-locked-tokens/meta",
+  "launchpad-locked-tokens-and-guaranteed-tickets",
+  "launchpad-locked-tokens-and-guaranteed-tickets/meta",
+  "launchpad-with-nft",
+  "launchpad-with-nft/meta",
+  "launchpad-guaranteed-tickets",
+  "launchpad-guaranteed-tickets/meta",
+  "launchpad-guaranteed-tickets-v2",
+  "launchpad-guaranteed-tickets-v2/meta",
+  "launchpad-migration-guaranteed-tickets",
+  "launchpad-migration-guaranteed-tickets/meta",
+  "launchpad-nft-and-guaranteed-tickets",
+  "launchpad-nft-and-guaranteed-tickets/meta"
+]

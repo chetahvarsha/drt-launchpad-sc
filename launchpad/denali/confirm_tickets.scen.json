@@ -1,0 +1,155 @@
+{
+    "name": "confirm tickets",
+    "gasSchedule": "v3",
+    "traceGas": false,
+    "steps": [
+        {
+            "traceGas": false,
+            "step": "externalSteps",
+            "path": "deposit_launchpad_tokens.scen.json"
+        },
+        {
+            "step": "setState",
+            "currentBlockInfo": {
+                "blockNonce": "20"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "user1-confirm-too-early",
+            "tx": {
+                "from": "address:user1",
+                "to": "sc:launchpad",
+                "value": "1000",
+                "function": "confirmTickets",
+                "arguments": [
+                    "10"
+                ],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "4",
+                "message": "str:Not in confirmation period",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "setState",
+            "currentBlockInfo": {
+                "blockNonce": "30"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "user1-confirm-wrong-payment-amount",
+            "tx": {
+                "from": "address:user1",
+                "to": "sc:launchpad",
+                "value": "500",
+                "function": "confirmTickets",
+                "arguments": [
+                    "10"
+                ],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "4",
+                "message": "str:Wrong amount sent",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "user1-confirm",
+            "tx": {
+                "from": "address:user1",
+                "to": "sc:launchpad",
+                "value": "1000",
+                "function": "confirmTickets",
+                "arguments": [
+                    "10"
+                ],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "0",
+                "message": "",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "user1-confirm-again",
+            "tx": {
+                "from": "address:user1",
+                "to": "sc:launchpad",
+                "value": "1000",
+                "function": "confirmTickets",
+                "arguments": [
+                    "10"
+                ],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "4",
+                "message": "str:Trying to confirm too many tickets",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "user3-confirm",
+            "tx": {
+                "from": "address:user3",
+                "to": "sc:launchpad",
+                "value": "100",
+                "function": "confirmTickets",
+                "arguments": [
+                    "1"
+                ],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "0",
+                "message": "",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "checkState",
+            "accounts": {
+                "sc:launchpad": {
+                    "nonce": "0",
+                    "balance": "1100",
+                    "dcdt": {
+                        "str:LAUNCH-123456": "500,000"
+                    },
+                    "storage": {
+                        "str:nrConfirmedTickets|address:user1": "10",
+                        "str:nrConfirmedTickets|address:user2": "",
+                        "str:nrConfirmedTickets|address:user3": "1",
+
+                        "+": ""
+                    },
+                    "code": "*"
+                },
+                "+": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+[package]
+name = "launchpad-guaranteed-tickets-v2"
+version = "0.0.0"
+authors = ["Dharitri <contact@dharitri.com>"]
+edition = "2021"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies.launchpad-common]
+path = "../launchpad-common"
+
+[dependencies.dharitri-sc]
+version = "0.54.2"
+
+[dependencies.dharitri-sc-modules]
+version = "0.54.2"
+
+[dev-dependencies]
+num-bigint = "0.4.2"
+
+[dev-dependencies.dharitri-sc-meta-lib]
+version = "0.54.2"
+
+[dev-dependencies.dharitri-sc-scenario]
+version = "0.54.2"

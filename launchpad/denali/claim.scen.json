@@ -1,0 +1,229 @@
+{
+    "name": "claim tickets",
+    "gasSchedule": "v3",
+    "traceGas": false,
+    "steps": [
+        {
+            "traceGas": false,
+            "step": "externalSteps",
+            "path": "select_winners_one_call.scen.json"
+        },
+        {
+            "step": "scCall",
+            "txId": "user2-claim-too-early",
+            "tx": {
+                "from": "address:user2",
+                "to": "sc:launchpad",
+                "value": "0",
+                "function": "claimLaunchpadTokens",
+                "arguments": [],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "4",
+                "message": "str:Not in claim period",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "setState",
+            "currentBlockInfo": {
+                "blockNonce": "150"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "user1-claim",
+            "tx": {
+                "from": "address:user1",
+                "to": "sc:launchpad",
+                "value": "0",
+                "function": "claimLaunchpadTokens",
+                "arguments": [],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "0",
+                "message": "",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "checkState",
+            "accounts": {
+                "address:user1": {
+                    "nonce": "*",
+                    "balance": "999,500",
+                    "dcdt": {
+                        "str:LAUNCH-123456": "500,000"
+                    },
+                    "storage": {}
+                },
+                "sc:launchpad": {
+                    "nonce": "0",
+                    "balance": "600",
+                    "dcdt": {
+                        "str:LAUNCH-123456": "0"
+                    },
+                    "storage": {
+                        "str:lastTicketId": "11",
+
+                        "str:ticketRangeForAddress|address:user1": "",
+                        "str:ticketRangeForAddress|address:user2": "",
+                        "str:ticketRangeForAddress|address:user3": "u32:11|u32:11",
+
+                        "str:ticketBatch|u32:1": "",
+                        "str:ticketBatch|u32:11": "address:user3|u32:1",
+                        "str:ticketBatch|u32:31": "",
+
+                        "str:claimedTokens|address:user1": "1",
+                        
+                        "str:flags": {
+                            "1-has_winner_selection_process_started": "u8:1",
+                            "2-were_tickets_filtered": "u8:1",
+                            "3-were_winners_selected": "u8:1",
+                            "4-was_additional_step_completed": "u8:1"
+                        },
+
+                        "+": ""
+                    },
+                    "code": "*"
+                },
+                "+": {}
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "user1-try-claim-again",
+            "tx": {
+                "from": "address:user1",
+                "to": "sc:launchpad",
+                "value": "0",
+                "function": "claimLaunchpadTokens",
+                "arguments": [],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "4",
+                "message": "str:Already claimed",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "user2-try-claim",
+            "tx": {
+                "from": "address:user2",
+                "to": "sc:launchpad",
+                "value": "0",
+                "function": "claimLaunchpadTokens",
+                "arguments": [],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "4",
+                "message": "str:You have no tickets",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "owner-claim-ticket-payment",
+            "tx": {
+                "from": "address:owner",
+                "to": "sc:launchpad",
+                "value": "0",
+                "function": "claimTicketPayment",
+                "arguments": [],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "0",
+                "message": "",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "checkState",
+            "accounts": {
+                "address:owner": {
+                    "nonce": "*",
+                    "balance": "500",
+                    "dcdt": {
+                        "str:LAUNCH-123456": "1,500,000"
+                    },
+                    "storage": {}
+                },
+                "sc:launchpad": {
+                    "nonce": "0",
+                    "balance": "100",
+                    "dcdt": {
+                        "str:LAUNCH-123456": "0"
+                    },
+                    "storage": {
+                        "+": ""
+                    },
+                    "code": "*"
+                },
+                "+": {}
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "user3-claim",
+            "tx": {
+                "from": "address:user3",
+                "to": "sc:launchpad",
+                "value": "0",
+                "function": "claimLaunchpadTokens",
+                "arguments": [],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "0",
+                "message": "",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "checkState",
+            "accounts": {
+                "address:user3": {
+                    "nonce": "*",
+                    "balance": "1,000,000",
+                    "storage": {}
+                },
+                "sc:launchpad": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "dcdt": {
+                        "str:LAUNCH-123456": "0"
+                    },
+                    "storage": {
+                        "+": ""
+                    },
+                    "code": "*"
+                },
+                "+": {}
+            }
+        }
+    ]
+}
